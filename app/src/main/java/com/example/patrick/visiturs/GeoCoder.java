@@ -37,7 +37,7 @@ public class GeoCoder {
     }
 
     private String makeAddress(Location locate) {
-        //https://maps.googleapis.com/maps/api/geocode/json?address=1600+Amphitheatre+Parkway,+Mountain+View,+CA&key=YOUR_API_KEY
+
         String s = locate.address.trim() + " " + locate.number.trim()+", "+locate.zipcode.trim();
         return s;
     }
@@ -89,16 +89,18 @@ public class GeoCoder {
         try {
             JSONObject object = new JSONObject(result);
 
-            double lng = ((JSONArray)object.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lng");
-            double lat = ((JSONArray)object.get("results")).getJSONObject(0).getJSONObject("geometry").getJSONObject("location").getDouble("lat");
+            double lng = ((JSONArray)object.get("results"))
+                    .getJSONObject(0).getJSONObject("geometry")
+                    .getJSONObject("location")
+                    .getDouble("lng");
+
+            double lat = ((JSONArray)object.get("results"))
+                    .getJSONObject(0)
+                    .getJSONObject("geometry")
+                    .getJSONObject("location").getDouble("lat");
+
             pos.add(new Positions(lat, lng));
 
-            //array = new JSONArray(result);
-
-
-           // for (int i = 0; i < array.length(); i++) {
-           //     pos.add(new Positions(array.getJSONObject(i).getDouble("lat"), array.getJSONObject(i).getDouble("lng")));
-           // }
         } catch (JSONException e) {
             e.printStackTrace();
         }

@@ -74,7 +74,7 @@ public class DAL {
     }
 
     public ArrayList<Location> selectAll() {
-        ArrayList<Location> list = new ArrayList<Location>();
+        ArrayList<Location> list = new ArrayList<>();
         Cursor cursor = this.db.query(TABLE_NAME, new String[] { "id", "name", "address", "zipcode", "number", "phoneNumber", "email", "lat", "lon", "imagePath" },
                 null, null, null, null, "name desc");
         if (cursor.moveToFirst()) {

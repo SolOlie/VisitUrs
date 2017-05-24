@@ -1,14 +1,12 @@
 package com.example.patrick.visiturs;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.*;
 import android.net.Uri;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +20,11 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<Location> locate = new ArrayList<>();
     private CustomListView clv;
     private DAL dal;
+    private Location l;
+    private int i;
+    private CardView cardView;
+    private GestureDetector gestureDetector;
+
 
 
     @Override
@@ -34,17 +37,29 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(my_toolbar);
         getSupportActionBar().setTitle("Locations");
 
-
-
         clv = new CustomListView(this, R.layout.customlocationcell, locate);
         lw = (ListView) findViewById(R.id.lstView);
         lw.setAdapter(clv);
         lw.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                ContactListClick(i);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ContactListClick(position);
             }
         });
+            lw.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                @Override
+                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                    MakeCall(position);
+
+                    return true;
+                }
+            });
+
+
+
+    }
+    private void init() {
     }
 
     @Override
@@ -63,6 +78,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(i, 1);
             return true;
         }
+
         return super.onOptionsItemSelected(item);
 
     }
@@ -78,11 +94,20 @@ public class MainActivity extends AppCompatActivity {
         lw.setAdapter(clv);
     }
 
-    private void ContactListClick(int i) {
+    public void ContactListClick(int i) {
         Location l = locate.get(i);
         Intent intent = new Intent(this, DetailsView.class);
         intent.putExtra("LocationID", l.getId());
         startActivityForResult(intent,1);
+    }
+    public void MakeCall(int i){
+        Location l = locate.get(i);
+        Intent intent = new Intent(Intent.ACTION_DIAL);
+        intent.setData(Uri.parse("tel:" + l.getPhoneNumber()));
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        }
+
     }
 
 

@@ -3,6 +3,7 @@ package com.example.patrick.visiturs;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +21,7 @@ public class MapMarker extends FragmentActivity implements OnMapReadyCallback {
     private ArrayList<Location> locate;
     private DAL dal;
     private String tag = "fejl_40";
+    private MainActivity ma;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,9 +42,20 @@ public class MapMarker extends FragmentActivity implements OnMapReadyCallback {
         Log.d(tag, "Klar");
         for (Location l:locate)
         {
-            googleMap.addMarker(new MarkerOptions().position(new LatLng(l.getLon(),l.getLat())).title(l.getName()));
+            MarkerOptions ms = new MarkerOptions().position(new LatLng(l.getLon(),l.getLat())).title(l.getName());
+
+            googleMap.addMarker(ms);
+
+
 
         }
+        mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+            @Override
+            public void onMapLongClick(LatLng latLng) {
+                Toast.makeText(getApplicationContext(), "Is it working with long press?", Toast.LENGTH_LONG).show();
+            }
+        });
+
         if(locate != null && locate.size()> 0)
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(locate.get(0).getLon(),locate.get(0).getLat()),10f));
     }
